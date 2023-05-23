@@ -6,12 +6,14 @@
       xmlns:local="clr-namespace:ProductivityMonitorWPF"
       xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
       mc:Ignorable="d" 
-      Title="SettingsPage" Height="103" Width="174">
+      Title="SettingsPage" Height="120" Width="174">
 
-    <Grid>
-        <xctk:ColorPicker x:Name="ProductivePicker" Margin="129,10,10,67" SelectedColorChanged="ClrPcker_Background_SelectedColorChanged" SelectedColor="#FF0004FF" Background="Blue"/>
+    <Grid Margin="0,0,0,-25">
+        <xctk:ColorPicker x:Name="ProductivePicker" Margin="129,10,10,83" SelectedColorChanged="ClrPcker_Background_SelectedColorChanged" SelectedColor="#FF0004FF" Background="Blue" Height="35"/>
         <Label Content="Productive Color" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Foreground="#FFFDFDFD"/>
         <Label Content="Unproductive Color" HorizontalAlignment="Left" Margin="10,52,0,0" VerticalAlignment="Top" Foreground="#FFFDFDFD"/>
-        <xctk:ColorPicker x:Name="UnproducitvePicker" Margin="129,52,10,25" SelectedColorChanged="ClrPcker_Background_Copy_SelectedColorChanged" Background="Red"/>
+        <xctk:ColorPicker x:Name="UnproducitvePicker" Margin="129,52,10,41" SelectedColorChanged="ClrPcker_Background_Copy_SelectedColorChanged" Background="Red" Height="35"/>
+        <Label Content="Save Time" HorizontalAlignment="Left" Margin="10,92,0,0" VerticalAlignment="Top" Foreground="#FFFDFDFD"/>
+        <CheckBox x:Name="SaveTimeCheckbox" HorizontalAlignment="Left" Margin="139,100,0,0" VerticalAlignment="Top" Foreground="{x:Null}" BorderBrush="#FF707070" Click="CheckBox_Checked"/>
     </Grid>
 </Page>

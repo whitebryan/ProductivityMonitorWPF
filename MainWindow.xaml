@@ -17,11 +17,7 @@
         </Canvas>
         <Frame x:Name="PageFrame" Margin="0,20,0,0" NavigationUIVisibility="Hidden"/>
         <Canvas x:Name="TimerCanvas">
-            <Button x:Name="PauseButton" Content="Button" Canvas.Left="130" Canvas.Top="53" Width="16" Height="16" BorderBrush="{x:Null}" Click="toggleTimer" Foreground="{x:Null}" IsEnabled="{Binding test}">
-                <Button.Background>
-                    <ImageBrush x:Name="PauseButtonImage" ImageSource="/pauseButton.png"/>
-                </Button.Background>
-            </Button>
+            <Button x:Name="PauseButton" Content="Button" Canvas.Left="130" Canvas.Top="53" Width="16" Height="16" BorderBrush="{x:Null}" Click="toggleTimer" Foreground="{x:Null}" IsEnabled="{Binding test}" Background="Black"/>
             <Label x:Name="ElapsedTime" Content="00:00:00" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="25" Foreground="White" Canvas.Left="87" Canvas.Top="58" Height="40" IsHitTestVisible="False"/>
             <TextBlock x:Name="CurWindowText" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Current Window : WINDOW" VerticalAlignment="Top" Height="18" Width="255" TextAlignment="Center" FontSize="14" TextTrimming="CharacterEllipsis" Foreground="White" Canvas.Top="34"/>
         </Canvas>

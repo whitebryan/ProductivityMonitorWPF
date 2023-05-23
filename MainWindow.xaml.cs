@@ -20,6 +20,8 @@ namespace ProductivityMonitorWPF
 		public string productiveColor;
 		public string unproductiveColor;
 		public List<string> proccesses;
+		public bool? shouldSaveTime;
+		public int? savedTime;
 	};
 
 
@@ -28,13 +30,14 @@ namespace ProductivityMonitorWPF
 		public List<string> trackedProccesses = new List<string>();
 		public WindowGrabber windowGrabber = new WindowGrabber();
 
+		//Settings
+		public bool shouldSaveTime = false;
 		public SolidColorBrush productiveColor = new SolidColorBrush(Colors.Blue);
 		public SolidColorBrush unproductiveColor = new SolidColorBrush(Colors.Red);
 
-		public bool test = false;
-
+		private int curOffset = 0;
 		private bool timerPaused = false;
-		private Stopwatch stopwatch = new Stopwatch();
+		private CustomStopWatch stopwatch = new CustomStopWatch(0);
 		private CancellationTokenSource cancelToken = new CancellationTokenSource();
 		
 
@@ -46,6 +49,13 @@ namespace ProductivityMonitorWPF
 			ThreadPool.QueueUserWorkItem(new WaitCallback(continuousCheck), cancelToken.Token);//new System.Threading.Thread(continuousCheck,);
 			Background = new SolidColorBrush(Colors.Black);
 			loadSettings();
+
+			string imagePath = timerPaused ? "playButton.png" : "pauseButton.png";
+			ImageBrush buttonBrush = new ImageBrush();
+			Image image = new Image();
+			image.Source = new BitmapImage(new Uri(imagePath, UriKind.Relative));
+			buttonBrush.ImageSource = image.Source;
+			PauseButton.Background = buttonBrush;
 		}
 
 		public void ChangePage(string pageToGoTo)
@@ -211,7 +221,7 @@ namespace ProductivityMonitorWPF
 						stopwatch.Start();
 					});
 				}
-				TimeSpan timespan = TimeSpan.FromSeconds(stopwatch.Elapsed.TotalSeconds);
+				TimeSpan timespan = TimeSpan.FromMilliseconds(stopwatch.ElapsedMiliseconds);
 				this.Dispatcher.Invoke(() =>
 				{
 					ElapsedTime.Content = $"{timespan:hh\\:mm\\:ss}";
@@ -243,6 +253,14 @@ namespace ProductivityMonitorWPF
 				productiveColor = ((SolidColorBrush)new BrushConverter().ConvertFrom(curSettings.productiveColor));
 				unproductiveColor = (SolidColorBrush)new BrushConverter().ConvertFrom(curSettings.unproductiveColor);
 				trackedProccesses = curSettings.proccesses;
+				shouldSaveTime = curSettings.shouldSaveTime ?? false;
+
+				int offset = shouldSaveTime ? curSettings.savedTime ?? 0 : 0;
+				stopwatch = new CustomStopWatch(offset);
+			}
+			else
+			{
+				stopwatch = new CustomStopWatch(0);
 			}
 		}
 
@@ -256,6 +274,8 @@ namespace ProductivityMonitorWPF
 			newSettings.productiveColor = productiveColor.ToString();
 			newSettings.unproductiveColor = unproductiveColor.ToString();
 			newSettings.proccesses = trackedProccesses;
+			newSettings.shouldSaveTime = shouldSaveTime;
+			newSettings.savedTime = shouldSaveTime ? (int)(stopwatch.ElapsedMiliseconds) : curOffset;
 
 			string jsonString = JsonConvert.SerializeObject(newSettings);
 			File.WriteAllText(settingsPath, jsonString);
@@ -265,8 +285,6 @@ namespace ProductivityMonitorWPF
 		{
 			timerPaused = !timerPaused;
 			string imagePath = timerPaused ? "playButton.png" : "pauseButton.png";
-
-
 			ImageBrush buttonBrush = new ImageBrush();
 			Image image = new Image();
 			image.Source = new BitmapImage(new Uri(imagePath, UriKind.Relative));

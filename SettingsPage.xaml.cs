@@ -26,6 +26,7 @@ namespace ProductivityMonitorWPF
 			InitializeComponent();
 			ProductivePicker.SelectedColor = ((MainWindow)Application.Current.MainWindow).productiveColor.Color;
 			UnproducitvePicker.SelectedColor = ((MainWindow)Application.Current.MainWindow).unproductiveColor.Color;
+			SaveTimeCheckbox.IsChecked = ((MainWindow)Application.Current.MainWindow).shouldSaveTime;
 		}
 
 		private void ClrPcker_Background_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
@@ -39,5 +40,10 @@ namespace ProductivityMonitorWPF
 			System.Windows.Media.Color newColor = UnproducitvePicker.SelectedColor ?? Colors.Black;
 			((MainWindow)Application.Current.MainWindow).unproductiveColor = new SolidColorBrush(newColor);
 		}
-	}
+
+		private void CheckBox_Checked(object sender, RoutedEventArgs e)
+		{
+			((MainWindow)Application.Current.MainWindow).shouldSaveTime = SaveTimeCheckbox.IsChecked ?? false;
+		}
+    }
 }
