@@ -1,0 +1,17 @@
+﻿<Page x:Class="ProductivityMonitorWPF.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ProductivityMonitorWPF"
+      xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+      mc:Ignorable="d" 
+      Title="SettingsPage" Height="103" Width="174">
+
+    <Grid>
+        <xctk:ColorPicker x:Name="ProductivePicker" Margin="129,10,10,67" SelectedColorChanged="ClrPcker_Background_SelectedColorChanged" SelectedColor="#FF0004FF" Background="Blue"/>
+        <Label Content="Productive Color" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Foreground="#FFFDFDFD"/>
+        <Label Content="Unproductive Color" HorizontalAlignment="Left" Margin="10,52,0,0" VerticalAlignment="Top" Foreground="#FFFDFDFD"/>
+        <xctk:ColorPicker x:Name="UnproducitvePicker" Margin="129,52,10,25" SelectedColorChanged="ClrPcker_Background_Copy_SelectedColorChanged" Background="Red"/>
+    </Grid>
+</Page>
