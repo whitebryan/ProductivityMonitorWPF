@@ -11,14 +11,19 @@
         >
     <Grid MinHeight="114" MinWidth="275">
         <Canvas HorizontalAlignment="Center" Width="145">
-            <Button x:Name="HomeButton" IsEnabled="{Binding homeButtonEnabled}" Content="Timer" HorizontalAlignment="Left" VerticalAlignment="Center" Click="Button_Clicked" Tag="Home" Canvas.Left="0"/>
-            <Button x:Name="ProcessesButton" IsEnabled="{Binding processesButtonEnabled}" Content="Processes" Click="Button_Clicked" Tag="Processes" VerticalAlignment="Center" HorizontalAlignment="Left" Canvas.Left="39"/>
-            <Button x:Name="SettingsButton" IsEnabled="{Binding settingsButtonEnabled}" Content="Settings" HorizontalAlignment="Left" VerticalAlignment="Center" Click="Button_Clicked" Tag="Settings" Canvas.Left="99"/>
+            <Button x:Name="HomeButton" Content="Timer" HorizontalAlignment="Left" VerticalAlignment="Center" Click="Button_Clicked" Tag="Home" Canvas.Left="0"/>
+            <Button x:Name="ProcessesButton" Content="Processes" Click="Button_Clicked" Tag="Processes" VerticalAlignment="Center" HorizontalAlignment="Left" Canvas.Left="39"/>
+            <Button x:Name="SettingsButton" Content="Settings" HorizontalAlignment="Left" VerticalAlignment="Center" Click="Button_Clicked" Tag="Settings" Canvas.Left="99"/>
         </Canvas>
         <Frame x:Name="PageFrame" Margin="0,20,0,0" NavigationUIVisibility="Hidden"/>
         <Canvas x:Name="TimerCanvas">
-            <Label x:Name="ElapsedTime" Content="00:00:00" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="25" Foreground="White" Canvas.Left="87" Canvas.Top="57"/>
-            <TextBlock x:Name="CurWindowText" HorizontalAlignment="Center" Margin="0,34,0,0" TextWrapping="Wrap" Text="Current Window : WINDOW" VerticalAlignment="Top" Height="23" Width="255" TextAlignment="Center" FontSize="14" TextTrimming="CharacterEllipsis" Foreground="White"/>
+            <Button x:Name="PauseButton" Content="Button" Canvas.Left="130" Canvas.Top="53" Width="16" Height="16" BorderBrush="{x:Null}" Click="toggleTimer" Foreground="{x:Null}" IsEnabled="{Binding test}">
+                <Button.Background>
+                    <ImageBrush x:Name="PauseButtonImage" ImageSource="/pauseButton.png"/>
+                </Button.Background>
+            </Button>
+            <Label x:Name="ElapsedTime" Content="00:00:00" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="25" Foreground="White" Canvas.Left="87" Canvas.Top="58" Height="40" IsHitTestVisible="False"/>
+            <TextBlock x:Name="CurWindowText" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Current Window : WINDOW" VerticalAlignment="Top" Height="18" Width="255" TextAlignment="Center" FontSize="14" TextTrimming="CharacterEllipsis" Foreground="White" Canvas.Top="34"/>
         </Canvas>
     </Grid>
 </Window>

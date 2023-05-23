@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Newtonsoft.Json;
-
+using Xceed.Wpf.Toolkit.Core;
 
 namespace ProductivityMonitorWPF
 {
@@ -24,14 +27,13 @@ namespace ProductivityMonitorWPF
 	{
 		public List<string> trackedProccesses = new List<string>();
 		public WindowGrabber windowGrabber = new WindowGrabber();
-		public bool homeButtonEnabled = true;
-		public bool processesButtonEnabled = true;
-		public bool settingsButtonEnabled = true;
 
 		public SolidColorBrush productiveColor = new SolidColorBrush(Colors.Blue);
 		public SolidColorBrush unproductiveColor = new SolidColorBrush(Colors.Red);
 
+		public bool test = false;
 
+		private bool timerPaused = false;
 		private Stopwatch stopwatch = new Stopwatch();
 		private CancellationTokenSource cancelToken = new CancellationTokenSource();
 		
@@ -79,21 +81,23 @@ namespace ProductivityMonitorWPF
 			switch (newPage)
 			{
 				case "Home":
-					homeButtonEnabled = false;
-					processesButtonEnabled = true;
-					settingsButtonEnabled = true;
+					HomeButton.IsEnabled = false;
+					ProcessesButton.IsEnabled = true;
+					SettingsButton.IsEnabled = true;
 					break;
 				case "Processes":
-					homeButtonEnabled = true;
-					processesButtonEnabled = false;
-					settingsButtonEnabled = true;
+					HomeButton.IsEnabled = true;
+					ProcessesButton.IsEnabled = false;
+					SettingsButton.IsEnabled = true;
 					break;
 				case "Settings":
-					homeButtonEnabled = true;
-					processesButtonEnabled = true;
-					settingsButtonEnabled = false;
+					HomeButton.IsEnabled = true;
+					ProcessesButton.IsEnabled = true;
+					SettingsButton.IsEnabled = false;
 					break;
 			}
+
+			OnPropertyChanged("IsEnabled");
 		}
 
 		private void Button_Clicked(object sender, RoutedEventArgs e)
@@ -111,17 +115,37 @@ namespace ProductivityMonitorWPF
 
 			while (true)
 			{
+				//Skip if the timer should be paused currently and make sure the background is set to black
+				if (timerPaused)
+				{
+					this.Dispatcher.Invoke(() =>
+					{
+						Background = new SolidColorBrush(Colors.Black);
+					});
+					
+					if(stopwatch.IsRunning)
+					{
+						workingTimer(false);
+					}
+
+					continue;
+				}
+
+
+				//Grab current active window info
 				WindowInfo info = windowGrabber.GetActivewindowInfo();
 
 				string curWindow = info.WindowFullName;
 				string[] windowNameSplit = curWindow.Split('-');
 				curWindow = windowNameSplit.Length > 1 ? windowNameSplit[windowNameSplit.Length - 1] : curWindow;
 
+				//Set cur window text
 				this.Dispatcher.Invoke(() =>
 				{
 					CurWindowText.Text = info.WindowFullName;
 				});
 
+				//Check if its a tracked proccess or not and set color/timer accordingly 
 				if (trackedProccesses.Count > 0 && !trackedProccesses.Contains(info.ProccessName))
 				{
 					this.Dispatcher.Invoke(() =>
@@ -145,6 +169,32 @@ namespace ProductivityMonitorWPF
 						Background = new SolidColorBrush(Colors.Black);
 					});
 					workingTimer(false);
+				}
+
+				//Check if pause button should be shown
+				bool pauseButtonShown = false;
+				this.Dispatcher.Invoke(() =>
+				{
+					pauseButtonShown = PauseButton.IsEnabled;
+				});
+
+				if (trackedProccesses.Count > 0 && !pauseButtonShown)
+				{
+					this.Dispatcher.Invoke(() =>
+					{
+						PauseButton.IsEnabled = true;
+						PauseButton.Visibility = Visibility.Visible;
+						OnPropertyChanged("IsEnabled");
+					});
+				}
+				else if(trackedProccesses.Count == 0 && pauseButtonShown)
+				{
+					this.Dispatcher.Invoke(() =>
+					{
+						PauseButton.IsEnabled = false;
+						PauseButton.Visibility = Visibility.Hidden;
+						OnPropertyChanged("IsEnabled");
+					});
 				}
 			}
 		}
@@ -209,6 +259,28 @@ namespace ProductivityMonitorWPF
 
 			string jsonString = JsonConvert.SerializeObject(newSettings);
 			File.WriteAllText(settingsPath, jsonString);
+		}
+
+		private void toggleTimer(object sender, RoutedEventArgs e)
+		{
+			timerPaused = !timerPaused;
+			string imagePath = timerPaused ? "playButton.png" : "pauseButton.png";
+
+
+			ImageBrush buttonBrush = new ImageBrush();
+			Image image = new Image();
+			image.Source = new BitmapImage(new Uri(imagePath, UriKind.Relative));
+			buttonBrush.ImageSource = image.Source;
+			PauseButton.Background = buttonBrush;
+		}
+
+
+		//Used to make sure changing a button IsEnabled updates
+		public event PropertyChangedEventHandler PropertyChanged;
+		protected virtual void OnPropertyChanged(string propertyName)
+		{
+			PropertyChangedEventHandler handler = PropertyChanged;
+			if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
 		}
 	}
 }

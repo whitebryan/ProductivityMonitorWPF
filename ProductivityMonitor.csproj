@@ -8,8 +8,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="pause-button-svgrepo-com.png" />
+    <None Remove="pause-button-svgrepo-com.svg" />
+    <None Remove="pauseButton.png" />
+    <None Remove="playButton.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="pauseButton.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="playButton.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
