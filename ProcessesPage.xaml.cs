@@ -42,7 +42,7 @@ namespace ProductivityMonitorWPF
 
 			foreach (Process p in allProccesses)
 			{
-				if (!ProccessSelectBox.Items.Contains(p.MainWindowTitle))
+				if (!ProccessSelectBox.Items.Contains(p.MainWindowTitle) && p.MainWindowTitle != "")
 				{
 					ProccessSelectBox.Items.Add(p.MainWindowTitle);
 					processMap.Add(p.MainWindowTitle, p.ProcessName);
@@ -71,10 +71,10 @@ namespace ProductivityMonitorWPF
 		//Remove process from being tracked
 		private void RemoveAddedButton_Click(object sender, RoutedEventArgs e)
 		{
-			if (AddedProccesses.SelectedItem != null && processMap.ContainsKey(ProccessSelectBox.SelectedItem.ToString()) )
+			if (AddedProccesses.SelectedItem != null)
 			{
-				mainWin.trackedProccesses.Remove(processMap[ProccessSelectBox.SelectedItem.ToString()]);
-				AddedProccesses.Items.Remove(processMap[ProccessSelectBox.SelectedItem.ToString()]);
+				mainWin.trackedProccesses.Remove(AddedProccesses.SelectedItem.ToString());
+				AddedProccesses.Items.Remove(AddedProccesses.SelectedItem.ToString());
 			}
 		}
 	}
