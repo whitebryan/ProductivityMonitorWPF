@@ -8,9 +8,9 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ProductivityMonitorWPF")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Simple productivty timer")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("CortTheSmerg")]
 [assembly: AssemblyProduct("ProductivityMonitorWPF")]
 [assembly: AssemblyCopyright("Copyright ©  2023")]
 [assembly: AssemblyTrademark("")]
