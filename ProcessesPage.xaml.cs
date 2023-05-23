@@ -23,6 +23,8 @@ namespace ProductivityMonitorWPF
 	{
 		MainWindow mainWin;
 
+		Dictionary<string, string> processMap = new Dictionary<string, string>();
+
 		public ProcessesPage()
 		{
 			InitializeComponent();
@@ -40,9 +42,10 @@ namespace ProductivityMonitorWPF
 
 			foreach (Process p in allProccesses)
 			{
-				if (!ProccessSelectBox.Items.Contains(p.ProcessName))
+				if (!ProccessSelectBox.Items.Contains(p.MainWindowTitle))
 				{
-					ProccessSelectBox.Items.Add(p.ProcessName);
+					ProccessSelectBox.Items.Add(p.MainWindowTitle);
+					processMap.Add(p.MainWindowTitle, p.ProcessName);
 				}
 			}
 
@@ -55,18 +58,24 @@ namespace ProductivityMonitorWPF
 		//Add process to be tracked
 		private void AddProccess_Click(object sender, RoutedEventArgs e)
 		{
-			AddedProccesses.Items.Add(ProccessSelectBox.SelectedItem);
-			if (!mainWin.trackedProccesses.Contains(ProccessSelectBox.SelectedItem))
+			if (ProccessSelectBox.SelectedItem != null && processMap.ContainsKey(ProccessSelectBox.SelectedItem.ToString()))
 			{
-				mainWin.trackedProccesses.Add(ProccessSelectBox.SelectedItem.ToString());
+				if (!mainWin.trackedProccesses.Contains(processMap[ProccessSelectBox.SelectedItem.ToString()]))
+				{
+					AddedProccesses.Items.Add(processMap[ProccessSelectBox.SelectedItem.ToString()]);
+					mainWin.trackedProccesses.Add(processMap[ProccessSelectBox.SelectedItem.ToString()]);
+				}
 			}
 		}
 
 		//Remove process from being tracked
 		private void RemoveAddedButton_Click(object sender, RoutedEventArgs e)
 		{
-			mainWin.trackedProccesses.Remove(AddedProccesses.SelectedItem.ToString());
-			AddedProccesses.Items.Remove(AddedProccesses.SelectedItem);
+			if (AddedProccesses.SelectedItem != null && processMap.ContainsKey(ProccessSelectBox.SelectedItem.ToString()) )
+			{
+				mainWin.trackedProccesses.Remove(processMap[ProccessSelectBox.SelectedItem.ToString()]);
+				AddedProccesses.Items.Remove(processMap[ProccessSelectBox.SelectedItem.ToString()]);
+			}
 		}
 	}
 }

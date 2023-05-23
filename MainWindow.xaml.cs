@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -32,7 +33,7 @@ namespace ProductivityMonitorWPF
 
 
 		private Stopwatch stopwatch = new Stopwatch();
-		private System.Threading.Thread thread;
+		private CancellationTokenSource cancelToken = new CancellationTokenSource();
 		
 
 		public MainWindow()
@@ -40,8 +41,7 @@ namespace ProductivityMonitorWPF
 			Application.Current.MainWindow = this;
 			InitializeComponent();
 			updateButtons("Home");
-			thread = new System.Threading.Thread(continuousCheck);
-			thread.Start();
+			ThreadPool.QueueUserWorkItem(new WaitCallback(continuousCheck), cancelToken.Token);//new System.Threading.Thread(continuousCheck,);
 			Background = new SolidColorBrush(Colors.Black);
 			loadSettings();
 		}
@@ -98,12 +98,17 @@ namespace ProductivityMonitorWPF
 
 		private void Button_Clicked(object sender, RoutedEventArgs e)
 		{
-			ChangePage(((Button)sender).Tag.ToString());
+			ChangePage(((Button)sender).Tag.ToString() ?? "Null");
 		}
 
 		//Updating via the timer always
-		private void continuousCheck()
+		private void continuousCheck(object? obj)
 		{
+			if(obj == null)
+			{
+				return;
+			}
+
 			while (true)
 			{
 				WindowInfo info = windowGrabber.GetActivewindowInfo();
@@ -174,7 +179,7 @@ namespace ProductivityMonitorWPF
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			saveSettings();
-			thread.Abort();
+			cancelToken.Cancel();
 		}
 
 		public void loadSettings()
@@ -185,7 +190,7 @@ namespace ProductivityMonitorWPF
 			if(File.Exists(settingsPath))
 			{
 				var curSettings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(settingsPath));
-				productiveColor = (SolidColorBrush)new BrushConverter().ConvertFrom(curSettings.productiveColor);
+				productiveColor = ((SolidColorBrush)new BrushConverter().ConvertFrom(curSettings.productiveColor));
 				unproductiveColor = (SolidColorBrush)new BrushConverter().ConvertFrom(curSettings.unproductiveColor);
 				trackedProccesses = curSettings.proccesses;
 			}
