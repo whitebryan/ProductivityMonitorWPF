@@ -60,7 +60,7 @@ namespace ProductivityMonitorWPF
 
 		public void ChangePage(string pageToGoTo)
 		{
-			Page page = null;
+			Page page = new Page();
 			switch (pageToGoTo)
 			{
 				//Create page to change to and show/hide timer for simplicity
@@ -78,11 +78,8 @@ namespace ProductivityMonitorWPF
 					break;
 			}
 
-			if(page != null)
-			{
-				PageFrame.Navigate(page);
-				updateButtons(pageToGoTo);
-			}
+			PageFrame.Navigate(page);
+			updateButtons(pageToGoTo);
 		}
 
 		//Activate/Deactive buttons while on their page
@@ -127,15 +124,15 @@ namespace ProductivityMonitorWPF
 			{
 				//Skip if the timer should be paused currently and make sure the background is set to black
 				if (timerPaused)
-				{
-					this.Dispatcher.Invoke(() =>
-					{
-						Background = new SolidColorBrush(Colors.Black);
-					});
-					
+				{	
 					if(stopwatch.IsRunning)
 					{
 						workingTimer(false);
+
+						this.Dispatcher.Invoke(() =>
+						{
+							Background = new SolidColorBrush(Colors.Black);
+						});
 					}
 
 					continue;
