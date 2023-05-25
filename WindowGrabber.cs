@@ -33,6 +33,8 @@ namespace ProductivityMonitorWPF
 
 		public WindowInfo GetActivewindowInfo()
 		{
+			WindowInfo info = new WindowInfo();
+
 			const int nChar = 256;
 			StringBuilder sb = new StringBuilder(nChar);
 
@@ -42,7 +44,6 @@ namespace ProductivityMonitorWPF
 			IntPtr returnVal = IntPtr.Zero;
 			returnVal = GetWindowText(handle, sb, nChar);
 
-			WindowInfo info = new WindowInfo();
 			info.WindowFullName = " ";
 			info.ProccessName = " ";
 			if (returnVal != IntPtr.Zero)
@@ -58,8 +59,16 @@ namespace ProductivityMonitorWPF
 		{
 			uint pid;
 			GetWindowThreadProcessId(handle, out pid);
-			Process p = Process.GetProcessById((int)pid);
-			return p.ProcessName;
+
+			try
+			{
+				Process p = Process.GetProcessById((int)pid);
+				return p.ProcessName;
+			}
+			catch(Exception ex)
+			{
+				return "ERROR PROCESS";
+			}
 		}
 	}
 }

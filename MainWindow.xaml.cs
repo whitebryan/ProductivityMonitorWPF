@@ -46,7 +46,7 @@ namespace ProductivityMonitorWPF
 			Application.Current.MainWindow = this;
 			InitializeComponent();
 			updateButtons("Home");
-			ThreadPool.QueueUserWorkItem(new WaitCallback(continuousCheck), cancelToken.Token);//new System.Threading.Thread(continuousCheck,);
+			ThreadPool.QueueUserWorkItem(new WaitCallback(continuousCheck), cancelToken.Token);
 			Background = new SolidColorBrush(Colors.Black);
 			loadSettings();
 
