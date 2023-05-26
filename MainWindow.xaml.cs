@@ -131,7 +131,7 @@ namespace ProductivityMonitorWPF
 
 						this.Dispatcher.Invoke(() =>
 						{
-							Background = new SolidColorBrush(Colors.Black);
+							changeBGColor("idle");
 						});
 					}
 
@@ -157,7 +157,7 @@ namespace ProductivityMonitorWPF
 				{
 					this.Dispatcher.Invoke(() =>
 					{
-						Background = unproductiveColor;
+						changeBGColor("unproductive");
 					});
 					workingTimer(false);
 				}
@@ -165,15 +165,15 @@ namespace ProductivityMonitorWPF
 				{
 					this.Dispatcher.Invoke(() =>
 					{
-						Background = productiveColor;
+						changeBGColor("productive");
 					});
 					workingTimer(true);
 				}
-				else
+				else if(stopwatch.IsRunning)
 				{
 					this.Dispatcher.Invoke(() =>
 					{
-						Background = new SolidColorBrush(Colors.Black);
+						changeBGColor("idle");
 					});
 					workingTimer(false);
 				}
@@ -289,6 +289,30 @@ namespace ProductivityMonitorWPF
 			PauseButton.Background = buttonBrush;
 		}
 
+		private void changeBGColor(string status)
+		{
+			switch (status)
+			{
+				case "unproductive":
+					if (((SolidColorBrush)Background).Color != unproductiveColor.Color)
+					{
+						Background = unproductiveColor;
+					}
+					break;
+				case "productive":
+					if (((SolidColorBrush)Background).Color != productiveColor.Color)
+					{
+						Background = productiveColor;
+					}
+					break;
+				case "idle":
+					if (((SolidColorBrush)Background).Color != Colors.Black)
+					{
+						Background = new SolidColorBrush(Colors.Black);
+					}
+					break;
+			}
+		}
 
 		//Used to make sure changing a button IsEnabled updates
 		public event PropertyChangedEventHandler PropertyChanged;

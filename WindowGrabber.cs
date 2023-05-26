@@ -34,6 +34,8 @@ namespace ProductivityMonitorWPF
 		public WindowInfo GetActivewindowInfo()
 		{
 			WindowInfo info = new WindowInfo();
+			info.WindowFullName = " ";
+			info.ProccessName = " ";
 
 			const int nChar = 256;
 			StringBuilder sb = new StringBuilder(nChar);
@@ -44,8 +46,6 @@ namespace ProductivityMonitorWPF
 			IntPtr returnVal = IntPtr.Zero;
 			returnVal = GetWindowText(handle, sb, nChar);
 
-			info.WindowFullName = " ";
-			info.ProccessName = " ";
 			if (returnVal != IntPtr.Zero)
 			{
 				info.WindowFullName = sb.ToString();
